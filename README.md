@@ -1,6 +1,20 @@
 # Machine Learning Practice Repository
 
-A comprehensive collection of Jupyter notebooks demonstrating fundamental and advanced machine learning concepts, data preprocessing techniques, and predictive modeling using Python's data science ecosystem. This repository serves as a practical guide for learning and implementing ML workflows on real-world datasets.
+A comprehensive collection of Jupyter notebooks demonstrating fundamental and advanced machine learning concepts, data preprocessing techniques, and predictive modeling using Python's data science ecosystem. This repository serves as a practical guide for learning and implementing ML workflows on real-world datasets, covering supervised and unsupervised learning, ensemble methods, and model evaluation.
+
+## Table of Contents
+- [Features](#-features)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
+- [Project Structure](#-project-structure)
+- [Notebooks Overview](#-notebooks-overview)
+- [Datasets Description](#-datasets-description)
+- [Usage Examples](#-usage-examples)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Author](#-author)
+- [Contact](#-contact)
+- [Acknowledgments](#-acknowledgments)
 
 ## 🚀 Features
 
@@ -46,80 +60,123 @@ A comprehensive collection of Jupyter notebooks demonstrating fundamental and ad
 ```
 machine-learning-practice/
 ├── datasets/
-│   ├── loan_data.csv          # Loan approval dataset
-│   ├── cgpa_package.csv       # CGPA vs Package correlation
-│   ├── house_price.csv        # House price prediction data
-│   └── diabetes.csv           # Diabetes prediction dataset
+│   ├── cgpa_package.csv          # CGPA vs Package correlation
+│   ├── cgpa_score_placement.csv  # CGPA, score, and placement data
+│   ├── citizen_data.csv          # Citizen demographic data
+│   ├── diabetes.csv              # Diabetes prediction dataset
+│   ├── grocery.csv               # Grocery transaction data for association rules
+│   ├── house_price.csv           # House price prediction data
+│   ├── iris_data.csv             # Iris flower dataset (features only)
+│   ├── iris_data_species.csv     # Iris flower dataset with species labels
+│   ├── iris_multiclass.csv       # Multiclass iris data
+│   ├── level_salary.csv          # Experience level vs salary data
+│   ├── loan_data.csv             # Loan approval dataset
+│   ├── logistic_dataset.csv      # Binary classification dataset
+│   ├── regularization_house_dataset.csv # House data for regularization
+│   ├── salary_dataset.csv        # Salary prediction dataset
+│   ├── salary_new_dataset.csv    # Additional salary data
+│   ├── student_data.csv          # Student performance data
+│   ├── student.csv               # Student information
+│   └── subscription_dataset.csv  # Subscription prediction data
 ├── notebooks/
-│   ├── practice1.ipynb        # Data preprocessing fundamentals
-│   ├── practice2.ipynb        # Feature scaling and transformations
-│   ├── practice3.ipynb        # Feature selection techniques
-│   ├── practice4.ipynb        # Train-test split and basic modeling
-│   └── package_predictor.ipynb # Linear regression implementation
-├── requirements.txt           # Python dependencies
-├── README.md                  # Project documentation
-├── LICENSE                    # MIT License
-└── .gitignore                 # Git ignore rules
+│   ├── practice1.ipynb           # Data preprocessing fundamentals
+│   ├── practice2.ipynb           # Feature scaling and transformations
+│   ├── practice3.ipynb           # Feature selection techniques
+│   ├── practice4.ipynb           # Train-test split and basic modeling
+│   ├── package_predictor.ipynb   # Linear regression implementation
+│   ├── multiple_linear.reg.ipynb # Multiple linear regression
+│   ├── polynomial_classifier.ipynb # Polynomial classification
+│   ├── polynomial_salary_model.ipynb # Polynomial regression for salary
+│   ├── regression_predictor.ipynb # Regression modeling
+│   ├── decision_tree.ipynb       # Decision tree classification
+│   ├── multiple_decision_tree.ipynb # Multiple decision trees
+│   ├── k_nearest-classificatoin.ipynb # KNN classification
+│   ├── k_nearest-regrassor.ipynb # KNN regression
+│   ├── Support Vector Machines(SVM) - Classification.ipynb # SVM classification
+│   ├── multiple_classification.ipynb # Multiple classification algorithms
+│   ├── subscription_prediction.ipynb # Subscription prediction project
+│   ├── job_predictino.ipynb      # Job prediction (typo in filename)
+│   ├── imbalance_dataset.ipynb   # Handling imbalanced datasets
+│   ├── imblearn.ipynb           # Imbalanced learning techniques
+│   ├── confusion_matrix.ipynb    # Confusion matrix and metrics
+│   ├── Bias–Variance.ipynb       # Bias-variance tradeoff
+│   ├── dataset_preprocessing.ipynb # Advanced preprocessing
+│   ├── bayes_theroam_dataset.ipynb # Bayesian theorem applications
+│   ├── esemble_learning.ipynb    # Ensemble learning methods
+│   └── unsupervised_k_mean_cluster.ipynb # Unsupervised learning (K-means, clustering)
+├── Matplotlib/                   # Matplotlib visualization examples
+├── Numpy/                        # NumPy practice notebooks
+├── Pandas/                       # Pandas data manipulation examples
+├── requirements.txt              # Python dependencies
+├── README.md                     # Project documentation
+├── LICENSE                       # MIT License
+└── .gitignore                    # Git ignore rules
 ```
 
 ## 📚 Notebooks Overview
 
-### `notebooks/practice1.ipynb` - Data Preprocessing Fundamentals
-- Loading and exploring datasets
-- Handling missing values (mean/mode imputation)
-- Categorical encoding (One-Hot, Label, Ordinal)
-- Outlier detection (IQR method, Z-score)
-- Data visualization and cleaning
+### Data Preprocessing & Feature Engineering
+- **`practice1.ipynb`** - Data preprocessing fundamentals: missing values, encoding, outliers, visualization
+- **`practice2.ipynb`** - Feature scaling and transformations: standardization, normalization, log transforms
+- **`practice3.ipynb`** - Feature selection techniques: sequential selection, importance ranking
+- **`dataset_preprocessing.ipynb`** - Advanced preprocessing pipelines and techniques
 
-### `notebooks/practice2.ipynb` - Feature Scaling & Transformations
-- Standardization (StandardScaler)
-- Normalization (MinMaxScaler)
-- Log transformations for skewed data
-- Handling duplicates and data types
-- Advanced preprocessing techniques
+### Regression Models
+- **`package_predictor.ipynb`** - Linear regression: CGPA to package prediction with visualization
+- **`multiple_linear.reg.ipynb`** - Multiple linear regression: multi-feature salary prediction
+- **`polynomial_salary_model.ipynb`** - Polynomial regression: non-linear salary modeling
+- **`regression_predictor.ipynb`** - General regression modeling and evaluation
 
-### `notebooks/practice3.ipynb` - Feature Selection
-- Sequential Feature Selection
-- Forward and backward selection
-- Model-based feature importance
-- Dimensionality reduction concepts
+### Classification Models
+- **`decision_tree.ipynb`** - Decision tree classification: subscription prediction with visualization
+- **`multiple_decision_tree.ipynb`** - Advanced decision tree techniques and hyperparameter tuning
+- **`k_nearest-classificatoin.ipynb`** - KNN classification: neighbor-based prediction algorithms
+- **`k_nearest-regrassor.ipynb`** - KNN regression: distance-based continuous prediction
+- **`Support Vector Machines(SVM) - Classification.ipynb`** - SVM classification: kernel methods and hyperparameter optimization
+- **`multiple_classification.ipynb`** - Comparative analysis of multiple classification algorithms
+- **`polynomial_classifier.ipynb`** - Polynomial classification: non-linear decision boundaries
 
-### `notebooks/practice4.ipynb` - Basic Modeling Setup
-- Train-test split implementation
-- Data preparation for modeling
-- Introduction to predictive workflows
+### Ensemble Learning
+- **`esemble_learning.ipynb`** - Ensemble methods: bagging, boosting, voting classifiers/regressors
+- **`Bias–Variance.ipynb`** - Bias-variance tradeoff analysis in ensemble contexts
 
-### `notebooks/package_predictor.ipynb` - Linear Regression Project
-- CGPA to Package prediction
-- Model training and evaluation
-- Visualization of regression results
-- Prediction on new data
+### Specialized Topics
+- **`imbalance_dataset.ipynb`** - Handling imbalanced datasets: techniques for skewed class distributions
+- **`imblearn.ipynb`** - Advanced imbalanced learning methods and evaluation metrics
+- **`confusion_matrix.ipynb`** - Model evaluation: confusion matrices, precision, recall, F1-score
+- **`bayes_theroam_dataset.ipynb`** - Bayesian theorem applications in machine learning
+- **`job_predictino.ipynb`** - Job prediction modeling (note: filename has typo)
+- **`subscription_prediction.ipynb`** - End-to-end subscription prediction project
+
+### Unsupervised Learning
+- **`unsupervised_k_mean_cluster.ipynb`** - K-means clustering, hierarchical clustering, DBSCAN, association rules
+
+### Model Validation & Cross-Validation
+- **`practice4.ipynb`** - Basic modeling setup: train-test splits, cross-validation fundamentals
 
 ## 📊 Datasets Description
 
-### Loan Data (`loan_data.csv`)
-Financial dataset for loan approval prediction containing:
-- Demographic information (age, gender, marital status)
-- Financial metrics (income, credit score, loan amount)
-- Property and employment details
+### Core Datasets
+- **`loan_data.csv`** - Loan approval prediction: Demographic and financial data for credit risk assessment
+- **`cgpa_package.csv`** - Academic performance: CGPA scores correlated with job package offers
+- **`cgpa_score_placement.csv`** - Placement data: CGPA, test scores, and placement outcomes
+- **`house_price.csv`** - Real estate: Property features, location factors, and market indicators
+- **`diabetes.csv`** - Medical prediction: Health metrics for diabetes classification
+- **`subscription_dataset.csv`** - Marketing: Customer data for subscription prediction
+- **`salary_dataset.csv`** - Compensation: Age, experience, and salary relationships
 
-### CGPA-Package Data (`cgpa_package.csv`)
-Academic performance correlation dataset with:
-- CGPA scores
-- Corresponding job package offers
-- Linear relationship analysis
+### Specialized Datasets
+- **`iris_data.csv`** / **`iris_data_species.csv`** - Classic ML dataset: Flower measurements and species classification
+- **`logistic_dataset.csv`** - Binary classification: Synthetic data for logistic regression
+- **`level_salary.csv`** - Experience-salary: Position levels mapped to compensation
+- **`grocery.csv`** - Market basket: Transaction data for association rule mining
+- **`regularization_house_dataset.csv`** - Regularization practice: House price data with multicollinearity
 
-### House Price Data (`house_price.csv`)
-Real estate dataset including:
-- Property features (area, bedrooms, bathrooms)
-- Location factors (distance to city, crime rate)
-- Market indicators (school rating, market trend)
-
-### Diabetes Data (`diabetes.csv`)
-Medical dataset for diabetes prediction with:
-- Health metrics (glucose, blood pressure, BMI)
-- Demographic factors (age, pregnancies)
-- Binary classification target
+### Additional Datasets
+- **`citizen_data.csv`** - Demographic data for citizen analysis
+- **`iris_multiclass.csv`** - Multiclass classification: Extended iris dataset
+- **`salary_new_dataset.csv`** - Extended salary data
+- **`student_data.csv`** / **`student.csv`** - Academic performance datasets
 
 ## 🏃‍♂️ Usage Examples
 
