@@ -135,10 +135,10 @@ Thumbs.db
 # *.json
 
 # Model files
-*.pkl
-*.h5
-*.model
-*.joblib
+# *.pkl
+# *.h5
+# *.model
+# *.joblib
 
 # Logs
 logs/
