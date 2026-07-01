@@ -1,8 +1,15 @@
+import os
+from pathlib import Path
+
 from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings
+from langchain_ollama import OllamaEmbeddings
 from dotenv import load_dotenv
 
-load_dotenv()
+BASE_DIR = Path(__file__).resolve().parents[1]
+load_dotenv(dotenv_path=BASE_DIR / ".env")
+
+EMBEDDING_MODEL = os.getenv("OLLAMA_EMBEDDING_MODEL", "nomic-embed-text:latest")
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 
 from langchain_core.documents import Document
 
@@ -12,7 +19,7 @@ docs = [
     Document(page_content="Neural networks are used in deep learning.", metadata={"source": "DL_book"}),
 ]
 
-embedding_model = OpenAIEmbeddings()
+embedding_model = OllamaEmbeddings(model=EMBEDDING_MODEL, base_url=OLLAMA_BASE_URL)
 
 vectorstore = Chroma.from_documents(
     documents = docs,

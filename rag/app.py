@@ -1,17 +1,25 @@
+import os
+import tempfile
+from pathlib import Path
+
 import streamlit as st
 from dotenv import load_dotenv
-import tempfile
-import os
-
 from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
-from langchain_mistralai import ChatMistralAI
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
 load_dotenv()
+
+BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(dotenv_path=BASE_DIR / ".env")
+
+PERSIST_DIR = str(BASE_DIR / "chroma_db")
+EMBEDDING_MODEL = os.getenv("OLLAMA_EMBEDDING_MODEL", "nomic-embed-text:latest")
+CHAT_MODEL = os.getenv("OLLAMA_CHAT_MODEL", "phi3:latest")
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 
 st.set_page_config(page_title="RAG Book Assistant")
 
@@ -43,12 +51,12 @@ if uploaded_file:
 
             chunks = splitter.split_documents(docs)
 
-            embeddings = OpenAIEmbeddings()
+            embeddings = OllamaEmbeddings(model=EMBEDDING_MODEL, base_url=OLLAMA_BASE_URL)
 
             vectorstore = Chroma.from_documents(
                 documents=chunks,
                 embedding=embeddings,
-                persist_directory="chroma_db"
+                persist_directory=PERSIST_DIR
             )
 
             vectorstore.persist()
@@ -56,26 +64,25 @@ if uploaded_file:
         st.success("Vector database created!")
 
 
+if os.path.exists(PERSIST_DIR):
 
-if os.path.exists("chroma_db"):
-
-    embeddings = OpenAIEmbeddings()
+    embeddings = OllamaEmbeddings(model=EMBEDDING_MODEL, base_url=OLLAMA_BASE_URL)
 
     vectorstore = Chroma(
-        persist_directory="chroma_db",
+        persist_directory=PERSIST_DIR,
         embedding_function=embeddings
     )
 
     retriever = vectorstore.as_retriever(
         search_type="mmr",
         search_kwargs={
-            "k":4,
-            "fetch_k":10,
-            "lambda_mult":0.5
+            "k": 4,
+            "fetch_k": 10,
+            "lambda_mult": 0.5
         }
     )
 
-    llm = ChatMistralAI(model="mistral-small-2506")
+    llm = ChatOllama(model=CHAT_MODEL, temperature=0, base_url=OLLAMA_BASE_URL)
 
     prompt = ChatPromptTemplate.from_messages(
         [

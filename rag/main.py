@@ -1,30 +1,39 @@
+import os
+from pathlib import Path
+
 from dotenv import load_dotenv
-from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
-from langchain_mistralai import ChatMistralAI
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_ollama import ChatOllama, OllamaEmbeddings
 
 load_dotenv()
 
-embedding_model = OpenAIEmbeddings()
+BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(dotenv_path=BASE_DIR / ".env")
+
+PERSIST_DIR = str(BASE_DIR / "chroma_db")
+EMBEDDING_MODEL = os.getenv("OLLAMA_EMBEDDING_MODEL", "nomic-embed-text:latest")
+CHAT_MODEL = os.getenv("OLLAMA_CHAT_MODEL", "phi3:latest")
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+
+embedding_model = OllamaEmbeddings(model=EMBEDDING_MODEL, base_url=OLLAMA_BASE_URL)
 
 vectorstore = Chroma(
-    persist_directory= "chroma_db",
+    persist_directory=PERSIST_DIR,
     embedding_function=embedding_model
 )
 
 retriever = vectorstore.as_retriever(
-    search_type = "mmr",
-    search_kwargs = {
-        "k" : 4,
-        "fetch_k":10,
-        "lambda_mult" :0.5
+    search_type="mmr",
+    search_kwargs={
+        "k": 4,
+        "fetch_k": 10,
+        "lambda_mult": 0.5
     }
 )
 
-llm = ChatMistralAI(model = "mistral-small-2506")
+llm = ChatOllama(model=CHAT_MODEL, temperature=0, base_url=OLLAMA_BASE_URL)
 
-#prompt template 
 prompt = ChatPromptTemplate.from_messages(
     [
         (
@@ -49,27 +58,26 @@ Question:
     ]
 )
 
-print("Rag system created ")
-
-print("press 0 to exit ")
+print("RAG system created")
+print("press 0 to exit")
 
 while True:
     query = input("You : ")
     if query == "0":
-        break 
-    
+        break
+
     docs = retriever.invoke(query)
 
     context = "\n\n".join(
         [doc.page_content for doc in docs]
     )
-    
+
     final_prompt = prompt.invoke({
-        "context" :context,
+        "context": context,
         "question": query
     })
-    
+
     response = llm.invoke(final_prompt)
 
-    print(f"\n AI: {response.content}")
+    print(f"\nAI: {response.content}")
     
