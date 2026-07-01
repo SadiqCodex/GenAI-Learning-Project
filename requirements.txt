@@ -12,3 +12,34 @@ uvicorn
 requests
 langchain-ollama
 langchaine_huggingface
+langchain
+langchain-core
+langchain-community
+
+# Vector Database
+
+chromadb
+
+# Embedding Models
+
+sentence-transformers
+
+# Document Loaders dependencies
+
+pypdf
+unstructured
+beautifulsoup4
+lxml
+
+# Data Handling
+
+pandas
+numpy
+
+# UI (optional)
+
+streamlit
+
+# Utilities
+
+tqdm
