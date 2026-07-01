@@ -25,12 +25,18 @@ summarize the following news into clear bullet points
 
 chain = prompt | llm | StrOutputParser()
 
-news_result = search_tool.run("Latest AI news of 2026 ")
+try:
+    news_result = search_tool.run("Latest AI news of 2026")
+except Exception as e:
+    news_result = (
+        "Unable to fetch live news right now. "
+        f"The search service failed with: {e}"
+    )
+    print("Tavily search failed:", e)
 
-result = chain.invoke({"news" : news_result})
+result = chain.invoke({"news": news_result})
 
 print(result)
-
 
 print(search_tool.description)
 print(search_tool.name)
