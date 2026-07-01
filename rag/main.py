@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import ChatOllama, OllamaEmbeddings
 
@@ -18,10 +18,7 @@ OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 
 embedding_model = OllamaEmbeddings(model=EMBEDDING_MODEL, base_url=OLLAMA_BASE_URL)
 
-vectorstore = Chroma(
-    persist_directory=PERSIST_DIR,
-    embedding_function=embedding_model
-)
+vectorstore = FAISS.load_local(PERSIST_DIR, embedding_model, allow_dangerous_deserialization=True)
 
 retriever = vectorstore.as_retriever(
     search_type="mmr",

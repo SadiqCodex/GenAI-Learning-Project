@@ -11,35 +11,17 @@ fastapi
 uvicorn
 requests
 langchain-ollama
-langchaine_huggingface
+langchain_huggingface
 langchain
 langchain-core
 langchain-community
-
-# Vector Database
-
 chromadb
-
-# Embedding Models
-
 sentence-transformers
-
-# Document Loaders dependencies
-
 pypdf
 unstructured
 beautifulsoup4
-lxml
-
-# Data Handling
-
+lxml 
 pandas
 numpy
-
-# UI (optional)
-
 streamlit
-
-# Utilities
-
 tqdm
