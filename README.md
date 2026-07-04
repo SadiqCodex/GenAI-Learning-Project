@@ -1,266 +1,349 @@
-# Machine Learning Practice Repository
+# GenAI Learning — LangChain & LLM Projects
 
-A comprehensive collection of Jupyter notebooks demonstrating fundamental and advanced machine learning concepts, data preprocessing techniques, and predictive modeling using Python's data science ecosystem. This repository serves as a practical guide for learning and implementing ML workflows on real-world datasets, covering supervised and unsupervised learning, ensemble methods, and model evaluation.
+A hands-on collection of **Generative AI** projects and experiments built with LangChain, Ollama (local LLMs), Streamlit, and various AI APIs. This repository covers the full spectrum of modern GenAI development — from basic LLM calls and embeddings to multi-agent pipelines, RAG systems, and production-ready AI applications.
+
+---
 
 ## Table of Contents
-- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Projects](#-projects)
+  - [AI Video Assistant](#1-ai-video-assistant)
+  - [Multi-Agent Research System](#2-multi-agent-research-system)
+  - [RAG Book Assistant](#3-rag-book-assistant)
+  - [Movie Recommender AI](#4-movie-recommender-ai)
+  - [CineSage — Movie Info Extractor](#5-cinesage--movie-info-extractor)
+  - [AI Mode Chatbot](#6-ai-mode-chatbot)
+- [Learning Modules](#-learning-modules)
 - [Prerequisites](#-prerequisites)
 - [Installation](#-installation)
-- [Project Structure](#-project-structure)
-- [Notebooks Overview](#-notebooks-overview)
-- [Datasets Description](#-datasets-description)
-- [Usage Examples](#-usage-examples)
-- [Contributing](#-contributing)
-- [License](#-license)
+- [Environment Variables](#-environment-variables)
 - [Author](#-author)
-- [Contact](#-contact)
-- [Acknowledgments](#-acknowledgments)
 
-## 🚀 Features
+---
 
-- **Data Preprocessing**: Complete pipelines for handling missing values, outliers, and data transformations
-- **Feature Engineering**: Encoding categorical variables, feature scaling, and selection techniques
-- **Machine Learning Models**: Implementation of regression, classification, and predictive modeling
-- **Data Visualization**: Exploratory data analysis with matplotlib and seaborn
-- **Real Datasets**: Practice on diverse datasets including loan data, CGPA-package correlation, house prices, and diabetes prediction
-- **Best Practices**: Clean, documented code following Python and ML conventions
+## 🛠 Tech Stack
+
+| Category | Tools |
+|---|---|
+| LLM Framework | LangChain, LangChain-Ollama |
+| Local LLMs | Ollama (phi3, nomic-embed-text) |
+| External APIs | Tavily Search, Sarvam AI (STT), TMDB, OpenWeatherMap |
+| Vector Stores | FAISS, ChromaDB |
+| Embeddings | Ollama Embeddings, HuggingFace (all-MiniLM-L6-v2) |
+| Audio/Video | Whisper (OpenAI), yt-dlp, pydub, FFmpeg |
+| Web Framework | Streamlit, FastAPI |
+| Deployment | Render (movie-rec API) |
+| Language | Python 3.11+ |
+
+---
+
+## 📁 Project Structure
+
+```
+GenAI Learning/
+├── AI-Video-Assistant/          # YouTube/video transcription + RAG chat
+│   ├── core/
+│   │   ├── extractor.py         # Action items, decisions, questions extraction
+│   │   ├── rag_engine.py        # LCEL RAG pipeline over transcript
+│   │   ├── summarizer.py        # Map-reduce summarization
+│   │   ├── transcriber.py       # Whisper + Sarvam AI (Hinglish support)
+│   │   └── vector_store.py      # ChromaDB + HuggingFace embeddings
+│   ├── utils/
+│   │   └── audio_processor.py   # yt-dlp download, WAV conversion, chunking
+│   └── app.py                   # Streamlit UI
+│
+├── Multi-agent-research-system/ # 4-agent research pipeline
+│   ├── agents.py                # Search agent, Reader agent, Writer & Critic chains
+│   ├── pipeline.py              # CLI pipeline runner
+│   ├── tools.py                 # Tavily web search + BeautifulSoup scraper tools
+│   └── app.py                   # Streamlit UI with live pipeline status
+│
+├── rag/                         # RAG system with PDF ingestion
+│   ├── app.py                   # Streamlit UI (upload PDF → ask questions)
+│   ├── create_database.py       # PDF → FAISS vector store builder
+│   ├── main.py                  # CLI RAG query interface
+│   ├── document loaders/        # PDF, web page, text loaders (experiments)
+│   ├── retrievers/              # MMR, multi-query, arXiv retriever experiments
+│   └── vector store/            # ChromaDB experiments
+│
+├── movie-rec-ai/                # Movie recommendation system
+│   ├── main.py                  # FastAPI backend (TF-IDF + TMDB API)
+│   ├── app.py                   # Streamlit frontend
+│   └── movies.ipynb             # Data preprocessing & TF-IDF model building
+│
+├── cinesage/                    # Movie info extractor using structured output
+│   ├── core.py                  # CLI version (Pydantic + Ollama)
+│   └── UICore.py                # Streamlit UI version
+│
+├── chatmodels/                  # LLM chat experiments
+│   ├── chat.py                  # Basic LLM invocation (Ollama/OpenAI/Groq/Gemini)
+│   ├── chatbot.py               # CLI chatbot with personality modes + memory
+│   └── UIChatbot.py             # Streamlit chatbot with 5 AI personality modes
+│
+├── tools/                       # LangChain tools & agents experiments
+│   ├── toolcalling.py           # Tool binding + manual tool call loop
+│   ├── owntool.py               # Custom @tool decorator example
+│   ├── Agents.py                # City agent (weather + news) with human approval
+│   ├── newssummarizer.py        # Tavily search → LLM summarization chain
+│   ├── sequencerunnable.py      # LCEL RunnableSequence experiments
+│   ├── parallelrunnable.py      # LCEL RunnableParallel experiments
+│   └── runnablepassthrough.py   # RunnablePassthrough experiments
+│
+├── embeddingmodels/             # Embedding model experiments
+│   ├── embedding.py             # Ollama embeddings (nomic-embed-text)
+│   └── huggingfaceembedding.py  # HuggingFace embeddings
+│
+├── .env                         # API keys (not committed)
+├── requirements.txt             # All Python dependencies
+└── pyproject.toml               # Project config (uv)
+```
+
+---
+
+## 🚀 Projects
+
+### 1. AI Video Assistant
+
+> `AI-Video-Assistant/`
+
+A full-stack meeting intelligence tool that takes any YouTube URL or local video file and produces a complete analysis.
+
+**Pipeline:**
+1. Audio extraction via `yt-dlp` + `pydub` (chunked into 10-min pieces)
+2. Transcription — English via **OpenAI Whisper** (local), Hinglish via **Sarvam AI** STT-Translate API
+3. Map-reduce **summarization** using Ollama phi3
+4. Extraction of **action items**, **key decisions**, and **open questions**
+5. **RAG chat** over the transcript using ChromaDB + HuggingFace embeddings + LCEL pipeline
+
+**Key Features:**
+- Supports both YouTube URLs and local video/audio files
+- Bilingual: English + Hinglish (auto-translated to English via Sarvam)
+- Live pipeline status in sidebar with animated step indicators
+- Custom dark-themed Streamlit UI (JetBrains Mono + Syne fonts)
+- In-session RAG chat with full conversation history
+
+**Run:**
+```bash
+streamlit run AI-Video-Assistant/app.py
+```
+
+---
+
+### 2. Multi-Agent Research System
+
+> `Multi-agent-research-system/`
+
+A 4-agent collaborative pipeline that researches any topic and produces a scored, structured report.
+
+**Agents:**
+| Agent | Role | Tool |
+|---|---|---|
+| Search Agent | Finds recent web information | Tavily Search API |
+| Reader Agent | Scrapes top URLs for deep content | BeautifulSoup scraper |
+| Writer Chain | Drafts structured research report | Ollama phi3 |
+| Critic Chain | Reviews and scores the report (X/10) | Ollama phi3 |
+
+**Key Features:**
+- Real-time pipeline status cards (Waiting → Running → Done)
+- Final report downloadable as `.md`
+- Critic feedback with score, strengths, and improvement areas
+- Custom dark UI with orange accent theme
+
+**Run:**
+```bash
+# Streamlit UI
+streamlit run Multi-agent-research-system/app.py
+
+# CLI
+python Multi-agent-research-system/pipeline.py
+```
+
+---
+
+### 3. RAG Book Assistant
+
+> `rag/`
+
+Upload any PDF and ask questions — answers grounded strictly in the document.
+
+**Architecture:**
+- PDF ingestion via `PyPDFLoader`
+- Chunking with `RecursiveCharacterTextSplitter` (1000 chars, 200 overlap)
+- Embeddings via `OllamaEmbeddings` (nomic-embed-text)
+- Vector store: **FAISS** (persisted locally)
+- Retrieval: **MMR** (Maximal Marginal Relevance) — `k=4, fetch_k=10`
+- LLM: Ollama phi3 with strict context-only prompt
+
+**Also includes:**
+- `create_database.py` — standalone script to pre-build FAISS index from a PDF
+- `main.py` — CLI query interface for the saved vector store
+- Experiments in `retrievers/` — multi-query retriever, arXiv retriever, MMR tuning
+
+**Run:**
+```bash
+streamlit run rag/app.py
+```
+
+---
+
+### 4. Movie Recommender AI
+
+> `movie-rec-ai/`
+
+A full-stack movie recommendation system with a FastAPI backend deployed on Render and a Streamlit frontend.
+
+**Backend (FastAPI):**
+- TF-IDF cosine similarity on movie metadata (local dataset, ~45k movies)
+- TMDB API integration for posters, details, genre-based discovery
+- Endpoints: `/home`, `/tmdb/search`, `/movie/id/{id}`, `/movie/search`, `/recommend/genre`
+- Deployed at: `https://movie-rec-466x.onrender.com`
+
+**Frontend (Streamlit):**
+- Keyword search with autocomplete dropdown
+- Poster grid with click-to-details navigation
+- Movie details page: poster, overview, genres, backdrop
+- Dual recommendations: TF-IDF similar movies + genre-based discovery
+
+**Run:**
+```bash
+# Backend
+uvicorn movie-rec-ai.main:app --reload
+
+# Frontend
+streamlit run movie-rec-ai/app.py
+```
+
+---
+
+### 5. CineSage — Movie Info Extractor
+
+> `cinesage/`
+
+Paste any movie description paragraph and get structured JSON output using **Pydantic structured output** with Ollama.
+
+**Output Schema:**
+```python
+class Movie(BaseModel):
+    title: str
+    release_year: Optional[int]
+    genre: List[str]
+    director: Optional[str]
+    cast: List[str]
+    rating: Optional[float]
+    summary: str
+```
+
+**Run:**
+```bash
+streamlit run cinesage/UICore.py
+```
+
+---
+
+### 6. AI Mode Chatbot
+
+> `chatmodels/`
+
+A conversational chatbot with 5 distinct AI personality modes, built with full message history.
+
+**Modes:** 😠 Angry · 😂 Funny · 😢 Sad · 😊 Happy · 🙄 Sarcastic
+
+**Key Features:**
+- Persistent conversation memory using `SystemMessage + HumanMessage + AIMessage`
+- Mode switching resets chat context automatically
+- Message count stats in sidebar
+- Supports Ollama, OpenAI, Groq, Gemini (commented stubs included)
+
+**Run:**
+```bash
+streamlit run chatmodels/UIChatbot.py
+```
+
+---
+
+## 📚 Learning Modules
+
+These modules document the learning journey through core LangChain concepts:
+
+| Module | What's Covered |
+|---|---|
+| `chatmodels/chat.py` | Basic LLM invocation across providers (Ollama, OpenAI, Groq, Gemini) |
+| `embeddingmodels/embedding.py` | Generating embeddings with Ollama (nomic-embed-text) |
+| `embeddingmodels/huggingfaceembedding.py` | HuggingFace sentence-transformers embeddings |
+| `tools/owntool.py` | Creating custom LangChain tools with `@tool` decorator |
+| `tools/toolcalling.py` | Manual tool binding + tool call loop with `bind_tools` |
+| `tools/Agents.py` | ReAct agent with weather + news tools + human approval middleware |
+| `tools/newssummarizer.py` | Tavily search → LCEL summarization chain |
+| `tools/sequencerunnable.py` | `RunnableSequence` (LCEL pipe operator) |
+| `tools/parallelrunnable.py` | `RunnableParallel` for concurrent chain execution |
+| `tools/runnablepassthrough.py` | `RunnablePassthrough` for context injection |
+| `rag/retrievers/mmr.py` | MMR retrieval tuning |
+| `rag/retrievers/multiquery.py` | Multi-query retriever for better recall |
+| `rag/retrievers/arixv.py` | ArXiv academic paper retriever |
+
+---
 
 ## 📋 Prerequisites
 
-- Python 3.8+
-- Jupyter Notebook or JupyterLab
-- Required packages: `pip install -r requirements.txt`
+- Python 3.11+
+- [Ollama](https://ollama.ai) installed and running locally
+- Required Ollama models pulled:
+  ```bash
+  ollama pull phi3
+  ollama pull nomic-embed-text
+  ```
+- FFmpeg installed (for audio processing in AI Video Assistant)
+
+---
 
 ## 🛠 Installation
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd machine-learning-practice
-   ```
-
-2. Create a virtual environment (recommended):
-   ```bash
-   python -m venv ml_env
-   source ml_env/bin/activate  # On Windows: ml_env\Scripts\activate
-   ```
-
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Launch Jupyter Notebook:
-   ```bash
-   jupyter notebook
-   ```
-
-## 📊 Project Structure
-
-```
-machine-learning-practice/
-├── datasets/
-│   ├── cgpa_package.csv          # CGPA vs Package correlation
-│   ├── cgpa_score_placement.csv  # CGPA, score, and placement data
-│   ├── citizen_data.csv          # Citizen demographic data
-│   ├── diabetes.csv              # Diabetes prediction dataset
-│   ├── grocery.csv               # Grocery transaction data for association rules
-│   ├── house_price.csv           # House price prediction data
-│   ├── iris_data.csv             # Iris flower dataset (features only)
-│   ├── iris_data_species.csv     # Iris flower dataset with species labels
-│   ├── iris_multiclass.csv       # Multiclass iris data
-│   ├── level_salary.csv          # Experience level vs salary data
-│   ├── loan_data.csv             # Loan approval dataset
-│   ├── logistic_dataset.csv      # Binary classification dataset
-│   ├── regularization_house_dataset.csv # House data for regularization
-│   ├── salary_dataset.csv        # Salary prediction dataset
-│   ├── salary_new_dataset.csv    # Additional salary data
-│   ├── student_data.csv          # Student performance data
-│   ├── student.csv               # Student information
-│   └── subscription_dataset.csv  # Subscription prediction data
-├── notebooks/
-│   ├── practice1.ipynb           # Data preprocessing fundamentals
-│   ├── practice2.ipynb           # Feature scaling and transformations
-│   ├── practice3.ipynb           # Feature selection techniques
-│   ├── practice4.ipynb           # Train-test split and basic modeling
-│   ├── package_predictor.ipynb   # Linear regression implementation
-│   ├── multiple_linear.reg.ipynb # Multiple linear regression
-│   ├── polynomial_classifier.ipynb # Polynomial classification
-│   ├── polynomial_salary_model.ipynb # Polynomial regression for salary
-│   ├── regression_predictor.ipynb # Regression modeling
-│   ├── decision_tree.ipynb       # Decision tree classification
-│   ├── multiple_decision_tree.ipynb # Multiple decision trees
-│   ├── k_nearest-classificatoin.ipynb # KNN classification
-│   ├── k_nearest-regrassor.ipynb # KNN regression
-│   ├── Support Vector Machines(SVM) - Classification.ipynb # SVM classification
-│   ├── multiple_classification.ipynb # Multiple classification algorithms
-│   ├── subscription_prediction.ipynb # Subscription prediction project
-│   ├── job_predictino.ipynb      # Job prediction (typo in filename)
-│   ├── imbalance_dataset.ipynb   # Handling imbalanced datasets
-│   ├── imblearn.ipynb           # Imbalanced learning techniques
-│   ├── confusion_matrix.ipynb    # Confusion matrix and metrics
-│   ├── Bias–Variance.ipynb       # Bias-variance tradeoff
-│   ├── dataset_preprocessing.ipynb # Advanced preprocessing
-│   ├── bayes_theroam_dataset.ipynb # Bayesian theorem applications
-│   ├── esemble_learning.ipynb    # Ensemble learning methods
-│   └── unsupervised_k_mean_cluster.ipynb # Unsupervised learning (K-means, clustering)
-├── Matplotlib/                   # Matplotlib visualization examples
-├── Numpy/                        # NumPy practice notebooks
-├── Pandas/                       # Pandas data manipulation examples
-├── requirements.txt              # Python dependencies
-├── README.md                     # Project documentation
-├── LICENSE                       # MIT License
-└── .gitignore                    # Git ignore rules
-```
-
-## 📚 Notebooks Overview
-
-### Data Preprocessing & Feature Engineering
-- **`practice1.ipynb`** - Data preprocessing fundamentals: missing values, encoding, outliers, visualization
-- **`practice2.ipynb`** - Feature scaling and transformations: standardization, normalization, log transforms
-- **`practice3.ipynb`** - Feature selection techniques: sequential selection, importance ranking
-- **`dataset_preprocessing.ipynb`** - Advanced preprocessing pipelines and techniques
-
-### Regression Models
-- **`package_predictor.ipynb`** - Linear regression: CGPA to package prediction with visualization
-- **`multiple_linear.reg.ipynb`** - Multiple linear regression: multi-feature salary prediction
-- **`polynomial_salary_model.ipynb`** - Polynomial regression: non-linear salary modeling
-- **`regression_predictor.ipynb`** - General regression modeling and evaluation
-
-### Classification Models
-- **`decision_tree.ipynb`** - Decision tree classification: subscription prediction with visualization
-- **`multiple_decision_tree.ipynb`** - Advanced decision tree techniques and hyperparameter tuning
-- **`k_nearest-classificatoin.ipynb`** - KNN classification: neighbor-based prediction algorithms
-- **`k_nearest-regrassor.ipynb`** - KNN regression: distance-based continuous prediction
-- **`Support Vector Machines(SVM) - Classification.ipynb`** - SVM classification: kernel methods and hyperparameter optimization
-- **`multiple_classification.ipynb`** - Comparative analysis of multiple classification algorithms
-- **`polynomial_classifier.ipynb`** - Polynomial classification: non-linear decision boundaries
-
-### Ensemble Learning
-- **`esemble_learning.ipynb`** - Ensemble methods: bagging, boosting, voting classifiers/regressors
-- **`Bias–Variance.ipynb`** - Bias-variance tradeoff analysis in ensemble contexts
-
-### Specialized Topics
-- **`imbalance_dataset.ipynb`** - Handling imbalanced datasets: techniques for skewed class distributions
-- **`imblearn.ipynb`** - Advanced imbalanced learning methods and evaluation metrics
-- **`confusion_matrix.ipynb`** - Model evaluation: confusion matrices, precision, recall, F1-score
-- **`bayes_theroam_dataset.ipynb`** - Bayesian theorem applications in machine learning
-- **`job_predictino.ipynb`** - Job prediction modeling (note: filename has typo)
-- **`subscription_prediction.ipynb`** - End-to-end subscription prediction project
-
-### Unsupervised Learning
-- **`unsupervised_k_mean_cluster.ipynb`** - K-means clustering, hierarchical clustering, DBSCAN, association rules
-
-### Model Validation & Cross-Validation
-- **`practice4.ipynb`** - Basic modeling setup: train-test splits, cross-validation fundamentals
-
-## 📊 Datasets Description
-
-### Core Datasets
-- **`loan_data.csv`** - Loan approval prediction: Demographic and financial data for credit risk assessment
-- **`cgpa_package.csv`** - Academic performance: CGPA scores correlated with job package offers
-- **`cgpa_score_placement.csv`** - Placement data: CGPA, test scores, and placement outcomes
-- **`house_price.csv`** - Real estate: Property features, location factors, and market indicators
-- **`diabetes.csv`** - Medical prediction: Health metrics for diabetes classification
-- **`subscription_dataset.csv`** - Marketing: Customer data for subscription prediction
-- **`salary_dataset.csv`** - Compensation: Age, experience, and salary relationships
-
-### Specialized Datasets
-- **`iris_data.csv`** / **`iris_data_species.csv`** - Classic ML dataset: Flower measurements and species classification
-- **`logistic_dataset.csv`** - Binary classification: Synthetic data for logistic regression
-- **`level_salary.csv`** - Experience-salary: Position levels mapped to compensation
-- **`grocery.csv`** - Market basket: Transaction data for association rule mining
-- **`regularization_house_dataset.csv`** - Regularization practice: House price data with multicollinearity
-
-### Additional Datasets
-- **`citizen_data.csv`** - Demographic data for citizen analysis
-- **`iris_multiclass.csv`** - Multiclass classification: Extended iris dataset
-- **`salary_new_dataset.csv`** - Extended salary data
-- **`student_data.csv`** / **`student.csv`** - Academic performance datasets
-
-## 🏃‍♂️ Usage Examples
-
-### Running Individual Notebooks
 ```bash
-jupyter notebook notebooks/practice1.ipynb
+# Clone the repository
+git clone <repository-url>
+cd "GenAI Learning"
+
+# Install dependencies (using uv — recommended)
+uv sync
+
+# Or using pip
+pip install -r requirements.txt
+
+# Copy and fill environment variables
+cp .env.example .env
 ```
 
-### Basic Data Loading and Preprocessing
-```python
-import pandas as pd
-from sklearn.preprocessing import StandardScaler
+---
 
-# Load dataset
-data = pd.read_csv('datasets/loan_data.csv')
+## 🔑 Environment Variables
 
-# Handle missing values
-data.fillna(data.mean(), inplace=True)
+Create a `.env` file in the root directory:
 
-# Scale numerical features
-scaler = StandardScaler()
-data['scaled_income'] = scaler.fit_transform(data[['Annual_Income']])
+```env
+# Ollama (local)
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=phi3
+OLLAMA_CHAT_MODEL=phi3:latest
+OLLAMA_EMBEDDING_MODEL=nomic-embed-text:latest
+OLLAMA_TEMPERATURE=0.3
+
+# External APIs
+TAVILY_API_KEY=<your-tavily-api-key>
+TMDB_API_KEY=<your-tmdb-api-key>
+OPENWEATHER_API_KEY=<your-openweather-api-key>
+SARVAM_API_KEY=<your-sarvam-api-key>        # For Hinglish transcription
 ```
 
-### Linear Regression Example
-```python
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
-
-# Load CGPA-Package data
-cgpa_data = pd.read_csv('datasets/cgpa_package.csv')
-X = cgpa_data[['cgpa']]
-y = cgpa_data['package']
-
-# Train-test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-
-# Train model
-lr = LinearRegression()
-lr.fit(X_train, y_train)
-
-# Make predictions
-predictions = lr.predict(X_test)
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Contribution Guidelines
-- Follow PEP 8 style guidelines
-- Add docstrings to functions
-- Include comments for complex logic
-- Test your code thoroughly
-- Update documentation as needed
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+---
 
 ## 👤 Author
 
 **Sadik Mohammad**
 
-## 📞 Contact
-
-- **Author**: Sadik Mohammad
-- **GitHub**: [Your GitHub Profile]
-- **Email**: [Your Email]
-
-For questions, suggestions, or collaboration opportunities, please open an issue in the repository.
-
-## 🙏 Acknowledgments
-
-- Thanks to the open-source community for providing excellent libraries
-- Dataset sources: Various public repositories and Kaggle
-- Inspired by real-world machine learning workflows
+- GitHub: [Your GitHub Profile]
+- Email: [Your Email]
 
 ---
 
-*Built with ❤️ using Python, pandas, scikit-learn, matplotlib, seaborn, and Jupyter*
+*Built with LangChain · Ollama · Streamlit · FastAPI · Whisper · FAISS · ChromaDB*
