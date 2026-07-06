@@ -16,8 +16,10 @@ load_dotenv()
 
 embeddings = HuggingFaceEmbeddings(model_name = "sentence-transformers/all-MiniLM-L6-v2" )
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 def build_retriver(pdf_path : str):
-    loader = PyPDFLoader(pdf_path)
+    loader = PyPDFLoader(os.path.join(BASE_DIR, pdf_path))
     document = loader.load()
 
     splitter = RecursiveCharacterTextSplitter(chunk_size = 800, 
