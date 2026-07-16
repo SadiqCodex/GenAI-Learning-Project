@@ -127,3 +127,5 @@ langchain-text-splitters
 langchain-huggingface
 sentence-transformers
 pypdf
+opencv-python
+mediapipe
