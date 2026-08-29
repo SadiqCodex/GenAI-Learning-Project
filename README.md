@@ -1,228 +1,491 @@
-# GenAI Learning — LangChain & LLM Projects
+# GenAI Learning
 
-A hands-on collection of **Generative AI** projects and experiments built with LangChain, Ollama (local LLMs), Streamlit, and various AI APIs. This repository covers the full spectrum of modern GenAI development — from basic LLM calls and embeddings to multi-agent pipelines, RAG systems, and production-ready AI applications.
+**Hands-on Generative AI projects spanning LangChain, LangGraph, RAG, agents, MCP, and computer vision.**
+
+A learning-focused monorepo of Python experiments and demo apps—from basic LLM calls and embeddings to multi-agent research, travel planning with MCP, video meeting intelligence, and content-based movie recommendations.
+
+[![Python](https://img.shields.io/badge/Python-3.13+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![LangChain](https://img.shields.io/badge/LangChain-Framework-1C3C3C)](https://www.langchain.com/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Agents-FF4B4B)](https://langchain-ai.github.io/langgraph/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-UI-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-API-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![GitHub](https://img.shields.io/badge/GitHub-SadiqCodex-181717?logo=github)](https://github.com/SadiqCodex/GenAI-Learning-Project)
 
 ---
 
 ## Table of Contents
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Projects](#-projects)
-  - [AI Video Assistant](#1-ai-video-assistant)
-  - [Multi-Agent Research System](#2-multi-agent-research-system)
-  - [RAG Book Assistant](#3-rag-book-assistant)
-  - [Movie Recommender AI](#4-movie-recommender-ai)
-  - [CineSage — Movie Info Extractor](#5-cinesage--movie-info-extractor)
-  - [AI Mode Chatbot](#6-ai-mode-chatbot)
-- [Learning Modules](#-learning-modules)
-- [Prerequisites](#-prerequisites)
-- [Installation](#-installation)
-- [Environment Variables](#-environment-variables)
-- [Author](#-author)
+
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Architecture / Workflow](#architecture--workflow)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration / Environment Variables](#configuration--environment-variables)
+- [Usage](#usage)
+- [API Reference](#api-reference)
+- [Examples](#examples)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Troubleshooting](#troubleshooting)
+- [Future Improvements](#future-improvements)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
 ---
 
-## 🛠 Tech Stack
+## Overview
 
-| Category | Tools |
-|---|---|
-| LLM Framework | LangChain, LangChain-Ollama |
-| Local LLMs | Ollama (phi3, nomic-embed-text) |
-| External APIs | Tavily Search, Sarvam AI (STT), TMDB, OpenWeatherMap |
-| Vector Stores | FAISS, ChromaDB |
-| Embeddings | Ollama Embeddings, HuggingFace (all-MiniLM-L6-v2) |
-| Audio/Video | Whisper (OpenAI), yt-dlp, pydub, FFmpeg |
-| Web Framework | Streamlit, FastAPI |
-| Deployment | Render (movie-rec API) |
-| Language | Python 3.11+ |
+**GenAI Learning** is a personal learning repository that explores modern generative AI patterns in Python. Each folder is a self-contained experiment or demo app—not a single production product.
+
+It addresses common GenAI learning goals:
+
+| Goal | How this repo explores it |
+| --- | --- |
+| Talk to local LLMs | Ollama (`phi3`) via LangChain in chat, RAG, and agent demos |
+| Ground answers in documents | PDF → chunk → embed → retrieve (FAISS / Chroma) |
+| Orchestrate multi-step agents | LangGraph graphs, tool-calling agents, critic loops |
+| Connect external tools | Tavily, OpenWeatherMap, TMDB, AviationStack, Sarvam STT, MCP servers |
+| Ship simple UIs / APIs | Streamlit frontends and FastAPI backends |
+
+> This is an educational codebase. Features, dependencies, and run instructions vary by subproject. Some apps expect local services (Ollama, FFmpeg, PostgreSQL) and API keys that are not bundled with the repo.
 
 ---
 
-## 📁 Project Structure
+## Key Features
 
+- **AI Video Assistant** — YouTube / local video → audio chunks → Whisper or Sarvam transcription → map-reduce summary → action items / decisions / questions → Chroma RAG chat
+- **Multi-Agent Research System** — Search (Tavily) → scrape → write report → critic score (Ollama `phi3`), with Streamlit UI and CLI
+- **TripMate AI** — LangGraph travel planner with MCP-backed flight, hotel, and weather tools; FastAPI + HTML UI; PostgreSQL checkpoints
+- **College Assistant (`Agentic AI/`)** — LangGraph router over academic / fee PDFs with Groq + FAISS + HuggingFace embeddings
+- **RAG Book Assistant** — Upload a PDF, build a FAISS index, ask questions with MMR retrieval and Ollama
+- **Movie Recommender AI** — FastAPI (TF-IDF over ~45k movies + TMDB) and Streamlit UI (default API host on Render)
+- **CineSage** — Structured movie metadata extraction with Pydantic + Ollama
+- **AI Mode Chatbot** — Streamlit chatbot with five personality modes and message history
+- **Learning modules** — LCEL runnables, tool calling, embeddings, retrievers, LangGraph patterns, MediaPipe hand/pose tracking
+
+---
+
+## Architecture / Workflow
+
+### Repository map
+
+```mermaid
+flowchart TB
+  subgraph apps [Demo Applications]
+    AVA[AI-Video-Assistant]
+    MARS[Multi-agent-research-system]
+    TM[TripMate-AI-Using-MCP]
+    RAG[rag]
+    MR[movie-rec-ai]
+    CS[cinesage]
+    CB[chatmodels]
+    AA[Agentic AI]
+  end
+
+  subgraph learn [Learning Modules]
+    TOOLS[tools]
+    EMB[embeddingmodels]
+    CV[Computer_Vision]
+  end
+
+  LLM[(Ollama / Groq / OpenAI)]
+  VS[(FAISS / Chroma)]
+  APIs[(Tavily · TMDB · Weather · AviationStack · Sarvam)]
+
+  AVA --> LLM
+  AVA --> VS
+  AVA --> APIs
+  MARS --> LLM
+  MARS --> APIs
+  TM --> LLM
+  TM --> APIs
+  RAG --> LLM
+  RAG --> VS
+  AA --> LLM
+  AA --> VS
+  MR --> APIs
+  CS --> LLM
+  CB --> LLM
+  TOOLS --> LLM
+  TOOLS --> APIs
 ```
+
+### AI Video Assistant pipeline
+
+```mermaid
+flowchart LR
+  A[YouTube URL / local file] --> B[yt-dlp + pydub]
+  B --> C[10-min WAV chunks]
+  C --> D{Language}
+  D -->|english| E[OpenAI Whisper]
+  D -->|hinglish| F[Sarvam STT-Translate]
+  E --> G[Transcript]
+  F --> G
+  G --> H[Summary · Title · Extractions]
+  G --> I[Chroma + HF embeddings]
+  I --> J[LCEL RAG chat]
+```
+
+### Multi-agent research pipeline
+
+```mermaid
+flowchart LR
+  T[Topic] --> S[Search Agent + Tavily]
+  S --> R[Reader Agent + scrape_url]
+  R --> W[Writer Chain]
+  W --> C[Critic Chain]
+  C --> O[Report + Score X/10]
+```
+
+### TripMate LangGraph flow
+
+```mermaid
+flowchart LR
+  U[User message] --> F[flight_agent]
+  F --> H[hotel_agent]
+  H --> W[weather_agent]
+  W --> I[itinerary_agent]
+  I --> X[final_agent]
+  X --> Y[JSON response]
+```
+
+---
+
+## Tech Stack
+
+| Category | Technologies used in this repo |
+| --- | --- |
+| Language | Python (`pyproject.toml`: `>=3.13`; `.python-version`: `3.13`) |
+| LLM frameworks | LangChain, LangGraph, LangChain Community / HuggingFace / text-splitters |
+| Local LLMs | [Ollama](https://ollama.ai) — typically `phi3`, embeddings `nomic-embed-text` |
+| Hosted LLMs | Groq (`llama-3.3-70b-versatile`), OpenAI (selected LangGraph demos) |
+| Vector stores | FAISS (`faiss-cpu`), Chroma (`langchain-chroma`) |
+| Embeddings | Ollama Embeddings, HuggingFace (`all-MiniLM-L6-v2`, `mixedbread-ai/mxbai-embed-xsmall-v1`) |
+| Tools / APIs | Tavily, OpenWeatherMap, TMDB, AviationStack, Sarvam AI STT |
+| MCP | `langchain-mcp-adapters`, `mcp`, Tavily MCP HTTP, `aviationstack-mcp` via `uvx`, custom weather MCP server |
+| Audio / video | OpenAI Whisper, yt-dlp, pydub, FFmpeg |
+| Web | Streamlit, FastAPI, Uvicorn, Jinja2 templates |
+| ML / CV | scikit-learn (TF-IDF), OpenCV, MediaPipe |
+| Persistence | FAISS local indexes, Chroma dirs, PostgreSQL (TripMate checkpoints via `langgraph-checkpoint-postgres`) |
+| Package managers | `uv` (`pyproject.toml` / `uv.lock`) and `pip` (`requirements.txt`; TripMate has its own) |
+
+---
+
+## Project Structure
+
+```text
 GenAI Learning/
-├── AI-Video-Assistant/          # YouTube/video transcription + RAG chat
-│   ├── core/
-│   │   ├── extractor.py         # Action items, decisions, questions extraction
-│   │   ├── rag_engine.py        # LCEL RAG pipeline over transcript
-│   │   ├── summarizer.py        # Map-reduce summarization
-│   │   ├── transcriber.py       # Whisper + Sarvam AI (Hinglish support)
-│   │   └── vector_store.py      # ChromaDB + HuggingFace embeddings
-│   ├── utils/
-│   │   └── audio_processor.py   # yt-dlp download, WAV conversion, chunking
-│   └── app.py                   # Streamlit UI
-│
-├── Multi-agent-research-system/ # 4-agent research pipeline
-│   ├── agents.py                # Search agent, Reader agent, Writer & Critic chains
-│   ├── pipeline.py              # CLI pipeline runner
-│   ├── tools.py                 # Tavily web search + BeautifulSoup scraper tools
-│   └── app.py                   # Streamlit UI with live pipeline status
-│
-├── rag/                         # RAG system with PDF ingestion
-│   ├── app.py                   # Streamlit UI (upload PDF → ask questions)
-│   ├── create_database.py       # PDF → FAISS vector store builder
-│   ├── main.py                  # CLI RAG query interface
-│   ├── document loaders/        # PDF, web page, text loaders (experiments)
-│   ├── retrievers/              # MMR, multi-query, arXiv retriever experiments
-│   └── vector store/            # ChromaDB experiments
-│
-├── movie-rec-ai/                # Movie recommendation system
-│   ├── main.py                  # FastAPI backend (TF-IDF + TMDB API)
-│   ├── app.py                   # Streamlit frontend
-│   └── movies.ipynb             # Data preprocessing & TF-IDF model building
-│
-├── cinesage/                    # Movie info extractor using structured output
-│   ├── core.py                  # CLI version (Pydantic + Ollama)
-│   └── UICore.py                # Streamlit UI version
-│
-├── chatmodels/                  # LLM chat experiments
-│   ├── chat.py                  # Basic LLM invocation (Ollama/OpenAI/Groq/Gemini)
-│   ├── chatbot.py               # CLI chatbot with personality modes + memory
-│   └── UIChatbot.py             # Streamlit chatbot with 5 AI personality modes
-│
-├── tools/                       # LangChain tools & agents experiments
-│   ├── toolcalling.py           # Tool binding + manual tool call loop
-│   ├── owntool.py               # Custom @tool decorator example
-│   ├── Agents.py                # City agent (weather + news) with human approval
-│   ├── newssummarizer.py        # Tavily search → LLM summarization chain
-│   ├── sequencerunnable.py      # LCEL RunnableSequence experiments
-│   ├── parallelrunnable.py      # LCEL RunnableParallel experiments
-│   └── runnablepassthrough.py   # RunnablePassthrough experiments
-│
-├── embeddingmodels/             # Embedding model experiments
-│   ├── embedding.py             # Ollama embeddings (nomic-embed-text)
-│   └── huggingfaceembedding.py  # HuggingFace embeddings
-│
-├── .env                         # API keys (not committed)
-├── requirements.txt             # All Python dependencies
-└── pyproject.toml               # Project config (uv)
+├── AI-Video-Assistant/           # Meeting / video intelligence (Streamlit + CLI)
+│   ├── app.py
+│   ├── main.py
+│   ├── core/                     # transcriber, summarizer, extractor, RAG, vector store
+│   └── utils/audio_processor.py
+├── Multi-agent-research-system/  # Search → scrape → write → critique
+│   ├── app.py                    # Streamlit UI
+│   ├── pipeline.py               # CLI runner
+│   ├── agents.py
+│   └── tools.py
+├── TripMate-AI-Using-MCP/        # Multi-agent travel planner (FastAPI + MCP)
+│   ├── app.py
+│   ├── backend.py
+│   ├── mcp_client.py
+│   ├── custom_weather_mcp_server.py
+│   ├── templates/
+│   ├── tools/
+│   └── requirements.txt
+├── Agentic AI/                   # LangGraph learning + College Assistant UI
+│   ├── app.py                    # Streamlit college assistant
+│   ├── sequential_base.py
+│   ├── conditional_RAG.py
+│   ├── parallel_reducers.py
+│   ├── humanintheloop.py
+│   ├── iterative_tools.py
+│   └── states.py
+├── rag/                          # PDF RAG (Streamlit + CLI helpers)
+│   ├── app.py
+│   ├── create_database.py
+│   ├── main.py
+│   ├── document loaders/
+│   ├── retrievers/
+│   └── vector store/
+├── movie-rec-ai/                 # TF-IDF + TMDB recommender
+│   ├── main.py                   # FastAPI
+│   ├── app.py                    # Streamlit
+│   ├── movies.ipynb
+│   └── *.pkl                     # Precomputed TF-IDF artifacts
+├── cinesage/                     # Structured movie extraction
+│   ├── core.py                   # CLI (ollama chat)
+│   └── UICore.py                 # Streamlit
+├── chatmodels/                   # Chat experiments + mode chatbot
+├── tools/                        # Tools, agents, LCEL runnables
+├── embeddingmodels/              # Embedding experiments
+├── Computer_Vision/              # MediaPipe hand / pose demos
+├── main.py                       # Prints langchain.__version__
+├── pyproject.toml
+├── requirements.txt
+├── uv.lock
+├── LICENSE
+└── README.md
 ```
 
 ---
 
-## 🚀 Projects
+## Prerequisites
 
-### 1. AI Video Assistant
+- **Python 3.13+** recommended for the root project (`pyproject.toml` / `.python-version`)
+- **[Ollama](https://ollama.ai)** running locally for Ollama-based demos, with models pulled as needed:
 
-> `AI-Video-Assistant/`
+```bash
+ollama pull phi3
+ollama pull nomic-embed-text
+```
 
-A full-stack meeting intelligence tool that takes any YouTube URL or local video file and produces a complete analysis.
+- **FFmpeg** on `PATH` for AI Video Assistant audio extraction
+- **API keys** for the apps you run (see [Configuration](#configuration--environment-variables))
+- **PostgreSQL** (and `DATABASE_URL`) for TripMate conversation checkpoints
+- **`uvx`** available if you use TripMate’s AviationStack MCP (`uvx aviationstack-mcp`)
+- Webcam / OpenCV for Computer Vision scripts
 
-**Pipeline:**
-1. Audio extraction via `yt-dlp` + `pydub` (chunked into 10-min pieces)
-2. Transcription — English via **OpenAI Whisper** (local), Hinglish via **Sarvam AI** STT-Translate API
-3. Map-reduce **summarization** using Ollama phi3
-4. Extraction of **action items**, **key decisions**, and **open questions**
-5. **RAG chat** over the transcript using ChromaDB + HuggingFace embeddings + LCEL pipeline
+---
 
-**Key Features:**
-- Supports both YouTube URLs and local video/audio files
-- Bilingual: English + Hinglish (auto-translated to English via Sarvam)
-- Live pipeline status in sidebar with animated step indicators
-- Custom dark-themed Streamlit UI (JetBrains Mono + Syne fonts)
-- In-session RAG chat with full conversation history
+## Installation
 
-**Run:**
+```bash
+git clone https://github.com/SadiqCodex/GenAI-Learning-Project.git
+cd GenAI-Learning-Project
+```
+
+### Option A — `uv` (root project)
+
+```bash
+uv sync
+```
+
+### Option B — `pip` (root `requirements.txt`)
+
+```bash
+python -m venv .venv
+
+# Windows
+.venv\Scripts\activate
+
+# macOS / Linux
+source .venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+### TripMate-specific dependencies
+
+```bash
+pip install -r TripMate-AI-Using-MCP/requirements.txt
+```
+
+### Additional packages used by some apps
+
+Root `pyproject.toml` / `requirements.txt` do not list every import used across subprojects. Depending on what you run, you may also need packages such as:
+
+`langchain-ollama`, `langchain-chroma`, `langchain-groq`, `openai-whisper`, `yt-dlp`, `pydub`, `httpx`, `tavily-python`, `beautifulsoup4`
+
+Install only what the target script imports.
+
+Create a root `.env` (there is no `.env.example` in the repo):
+
+```bash
+# Create manually, then edit values
+# Windows PowerShell:  New-Item .env
+# macOS / Linux:       touch .env
+```
+
+---
+
+## Configuration / Environment Variables
+
+Place a `.env` in the **repository root**. Most modules call `load_dotenv()` and resolve keys from there (some also check a local `.env` beside the script).
+
+| Variable | Used by | Purpose |
+| --- | --- | --- |
+| `OLLAMA_BASE_URL` | Many Ollama demos | Default `http://localhost:11434` |
+| `OLLAMA_MODEL` | Research system, video cores | Default `phi3` |
+| `OLLAMA_CHAT_MODEL` | RAG, tools | Default `phi3:latest` |
+| `OLLAMA_EMBEDDING_MODEL` | RAG | Default `nomic-embed-text:latest` |
+| `OLLAMA_TEMPERATURE` | Video / research | Float temperature |
+| `WHISPER_MODEL` | AI Video Assistant | Whisper size (default `small`) |
+| `SARVAM_API_KEY` | AI Video Assistant (Hinglish) | Sarvam STT-Translate |
+| `SARVAM_STT_MODEL` | AI Video Assistant | Default `saaras:v2.5` |
+| `TAVILY_API_KEY` | Research, tools, TripMate | Web search |
+| `TMDB_API_KEY` | `movie-rec-ai` | Movie metadata / posters |
+| `OPENWEATHER_API_KEY` | `tools/Agents.py`, TripMate weather MCP | Weather |
+| `GROQ_API_KEY` | TripMate, Agentic AI demos | Groq chat models |
+| `OPENAI_API_KEY` | Selected LangGraph scripts | e.g. human-in-the-loop writer |
+| `DATABASE_URL` | TripMate | PostgreSQL for LangGraph checkpoints |
+| `AVIATIONSTACK_API_KEY` | TripMate | Flight search / MCP |
+| `DEFAULT_ORIGIN_IATA` | TripMate flight tool | Default origin (code default `DAC`) |
+| `HUGGINGFACEHUB_API_TOKEN` | Optional HF usage | Present in local env patterns |
+| `GEMINI_API_KEY` / `OPENROUTER_API_KEY` / `MISTRAL_API_KEY` | Optional / experiment | May appear in `.env`; not required for every app |
+
+Example skeleton (replace placeholders; do not commit real secrets):
+
+```env
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=phi3
+OLLAMA_CHAT_MODEL=phi3:latest
+OLLAMA_EMBEDDING_MODEL=nomic-embed-text:latest
+OLLAMA_TEMPERATURE=0.3
+
+TAVILY_API_KEY=
+TMDB_API_KEY=
+OPENWEATHER_API_KEY=
+GROQ_API_KEY=
+OPENAI_API_KEY=
+SARVAM_API_KEY=
+
+DATABASE_URL=postgresql://user:password@localhost:5432/travel_db
+AVIATIONSTACK_API_KEY=
+DEFAULT_ORIGIN_IATA=DAC
+```
+
+`.env` is listed in `.gitignore` and should stay out of version control.
+
+---
+
+## Usage
+
+Run commands from the **repository root** unless noted. Activate your virtual environment first.
+
+### AI Video Assistant
+
 ```bash
 streamlit run AI-Video-Assistant/app.py
-```
-
----
-
-### 2. Multi-Agent Research System
-
-> `Multi-agent-research-system/`
-
-A 4-agent collaborative pipeline that researches any topic and produces a scored, structured report.
-
-**Agents:**
-| Agent | Role | Tool |
-|---|---|---|
-| Search Agent | Finds recent web information | Tavily Search API |
-| Reader Agent | Scrapes top URLs for deep content | BeautifulSoup scraper |
-| Writer Chain | Drafts structured research report | Ollama phi3 |
-| Critic Chain | Reviews and scores the report (X/10) | Ollama phi3 |
-
-**Key Features:**
-- Real-time pipeline status cards (Waiting → Running → Done)
-- Final report downloadable as `.md`
-- Critic feedback with score, strengths, and improvement areas
-- Custom dark UI with orange accent theme
-
-**Run:**
-```bash
-# Streamlit UI
-streamlit run Multi-agent-research-system/app.py
 
 # CLI
+python AI-Video-Assistant/main.py
+```
+
+Provide a YouTube URL or local media path; choose `english` (Whisper) or `hinglish` (Sarvam).
+
+### Multi-Agent Research System
+
+```bash
+streamlit run Multi-agent-research-system/app.py
 python Multi-agent-research-system/pipeline.py
 ```
 
----
+### TripMate AI
 
-### 3. RAG Book Assistant
-
-> `rag/`
-
-Upload any PDF and ask questions — answers grounded strictly in the document.
-
-**Architecture:**
-- PDF ingestion via `PyPDFLoader`
-- Chunking with `RecursiveCharacterTextSplitter` (1000 chars, 200 overlap)
-- Embeddings via `OllamaEmbeddings` (nomic-embed-text)
-- Vector store: **FAISS** (persisted locally)
-- Retrieval: **MMR** (Maximal Marginal Relevance) — `k=4, fetch_k=10`
-- LLM: Ollama phi3 with strict context-only prompt
-
-**Also includes:**
-- `create_database.py` — standalone script to pre-build FAISS index from a PDF
-- `main.py` — CLI query interface for the saved vector store
-- Experiments in `retrievers/` — multi-query retriever, arXiv retriever, MMR tuning
-
-**Run:**
 ```bash
-streamlit run rag/app.py
+python TripMate-AI-Using-MCP/app.py
 ```
 
----
+Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/). Update the weather MCP `command` / `args` paths in `TripMate-AI-Using-MCP/mcp_client.py` to your machine before relying on weather tools.
 
-### 4. Movie Recommender AI
+### College Assistant (Agentic AI)
 
-> `movie-rec-ai/`
-
-A full-stack movie recommendation system with a FastAPI backend deployed on Render and a Streamlit frontend.
-
-**Backend (FastAPI):**
-- TF-IDF cosine similarity on movie metadata (local dataset, ~45k movies)
-- TMDB API integration for posters, details, genre-based discovery
-- Endpoints: `/home`, `/tmdb/search`, `/movie/id/{id}`, `/movie/search`, `/recommend/genre`
-- Deployed at: `https://movie-rec-466x.onrender.com`
-
-**Frontend (Streamlit):**
-- Keyword search with autocomplete dropdown
-- Poster grid with click-to-details navigation
-- Movie details page: poster, overview, genres, backdrop
-- Dual recommendations: TF-IDF similar movies + genre-based discovery
-
-**Run:**
 ```bash
-# Backend
+streamlit run "Agentic AI/app.py"
+```
+
+Expects `academics_handbook.pdf` and `fee_structure.pdf` beside the app (both are present in `Agentic AI/`).
+
+### RAG Book Assistant
+
+```bash
+streamlit run rag/app.py
+
+# Pre-build FAISS from bundled sample PDF, then query via CLI
+python rag/create_database.py
+python rag/main.py
+```
+
+### Movie Recommender
+
+```bash
+# API (requires TMDB_API_KEY and pickle artifacts in movie-rec-ai/)
 uvicorn movie-rec-ai.main:app --reload
 
-# Frontend
+# UI (defaults to hosted API base URL in app.py)
 streamlit run movie-rec-ai/app.py
 ```
 
+### CineSage
+
+```bash
+streamlit run cinesage/UICore.py
+python cinesage/core.py
+```
+
+### AI Mode Chatbot
+
+```bash
+streamlit run chatmodels/UIChatbot.py
+```
+
+Modes: Angry · Funny · Sad · Happy · Sarcastic.
+
+### Learning scripts (examples)
+
+```bash
+python chatmodels/chat.py
+python embeddingmodels/embedding.py
+python tools/toolcalling.py
+python tools/Agents.py
+python "Agentic AI/sequential_base.py"
+python Computer_Vision/HandTracking.py
+```
+
 ---
 
-### 5. CineSage — Movie Info Extractor
+## API Reference
 
-> `cinesage/`
+### Movie Recommender (`movie-rec-ai/main.py`)
 
-Paste any movie description paragraph and get structured JSON output using **Pydantic structured output** with Ollama.
+| Method | Path | Description |
+| --- | --- | --- |
+| `GET` | `/health` | Health check |
+| `GET` | `/home` | TMDB feed (`category`: `trending`, `popular`, `top_rated`, `upcoming`, `now_playing`) |
+| `GET` | `/tmdb/search` | TMDB keyword search |
+| `GET` | `/movie/id/{tmdb_id}` | Movie details |
+| `GET` | `/movie/search` | Search bundle: details + TF-IDF + genre recommendations |
+| `GET` | `/recommend/tfidf` | TF-IDF similar titles |
+| `GET` | `/recommend/genre` | Genre-based TMDB discovery |
 
-**Output Schema:**
+Streamlit frontend currently sets `API_BASE` to `https://movie-rec-466x.onrender.com` (with a local URL as a non-effective fallback expression in code). Point it at `http://127.0.0.1:8000` when testing the API locally.
+
+### TripMate (`TripMate-AI-Using-MCP/app.py`)
+
+| Method | Path | Description |
+| --- | --- | --- |
+| `GET` | `/` | Web UI |
+| `GET` | `/health` | Health check |
+| `POST` | `/api/travel` | Travel plan request |
+
+Request body:
+
+```json
+{
+  "message": "Plan a 3-day trip to Tokyo with a budget of $1200",
+  "thread_id": null
+}
+```
+
+Example:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/travel \
+  -H "Content-Type: application/json" \
+  -d "{\"message\":\"Plan a 3-day trip to Tokyo with a budget of $1200\"}"
+```
+
+---
+
+## Examples
+
+**CineSage structured schema** (`cinesage/UICore.py` / `core.py`):
+
 ```python
 class Movie(BaseModel):
     title: str
@@ -234,116 +497,93 @@ class Movie(BaseModel):
     summary: str
 ```
 
-**Run:**
-```bash
-streamlit run cinesage/UICore.py
-```
+**RAG retrieval settings** (`rag/app.py`): chunk size `1000`, overlap `200`, MMR with `k=4`, `fetch_k=10`, `lambda_mult=0.5`.
+
+**Movie dataset artifact**: `movie-rec-ai/df.pkl` holds **45,447** rows with columns including `title`, `overview`, `genres`, `tagline`, `vote_average`, `popularity`, `tags`.
 
 ---
 
-### 6. AI Mode Chatbot
+## Testing
 
-> `chatmodels/`
+There is **no automated pytest suite** in this repository. Manual / exploratory scripts include:
 
-A conversational chatbot with 5 distinct AI personality modes, built with full message history.
+| File | Role |
+| --- | --- |
+| `AI-Video-Assistant/test.py` | Manual pipeline smoke run |
+| `TripMate-AI-Using-MCP/test.py` | Manual TripMate checks |
+| `TripMate-AI-Using-MCP/mcp_client_test.py` | MCP client experiment |
+| `rag/document loaders/test.py` | Document-loader experiment |
 
-**Modes:** 😠 Angry · 😂 Funny · 😢 Sad · 😊 Happy · 🙄 Sarcastic
-
-**Key Features:**
-- Persistent conversation memory using `SystemMessage + HumanMessage + AIMessage`
-- Mode switching resets chat context automatically
-- Message count stats in sidebar
-- Supports Ollama, OpenAI, Groq, Gemini (commented stubs included)
-
-**Run:**
-```bash
-streamlit run chatmodels/UIChatbot.py
-```
+`pytest` appears in `requirements.txt` but no `test_*.py` unit tests are defined for CI.
 
 ---
 
-## 📚 Learning Modules
+## Deployment
 
-These modules document the learning journey through core LangChain concepts:
+| Component | Notes present in repo |
+| --- | --- |
+| Movie API | `movie-rec-ai/runtime.txt` specifies `python-3.11.9` (Render-style). Streamlit UI references `https://movie-rec-466x.onrender.com`. |
+| TripMate | `DATABASE_URL` error text mentions a Render PostgreSQL external URL; local run uses Uvicorn on `127.0.0.1:8000`. |
 
-| Module | What's Covered |
-|---|---|
-| `chatmodels/chat.py` | Basic LLM invocation across providers (Ollama, OpenAI, Groq, Gemini) |
-| `embeddingmodels/embedding.py` | Generating embeddings with Ollama (nomic-embed-text) |
-| `embeddingmodels/huggingfaceembedding.py` | HuggingFace sentence-transformers embeddings |
-| `tools/owntool.py` | Creating custom LangChain tools with `@tool` decorator |
-| `tools/toolcalling.py` | Manual tool binding + tool call loop with `bind_tools` |
-| `tools/Agents.py` | ReAct agent with weather + news tools + human approval middleware |
-| `tools/newssummarizer.py` | Tavily search → LCEL summarization chain |
-| `tools/sequencerunnable.py` | `RunnableSequence` (LCEL pipe operator) |
-| `tools/parallelrunnable.py` | `RunnableParallel` for concurrent chain execution |
-| `tools/runnablepassthrough.py` | `RunnablePassthrough` for context injection |
-| `rag/retrievers/mmr.py` | MMR retrieval tuning |
-| `rag/retrievers/multiquery.py` | Multi-query retriever for better recall |
-| `rag/retrievers/arixv.py` | ArXiv academic paper retriever |
+No other first-class deployment configs (Dockerfiles, CI workflows) are included in this repository.
 
 ---
 
-## 📋 Prerequisites
+## Troubleshooting
 
-- Python 3.11+
-- [Ollama](https://ollama.ai) installed and running locally
-- Required Ollama models pulled:
-  ```bash
-  ollama pull phi3
-  ollama pull nomic-embed-text
-  ```
-- FFmpeg installed (for audio processing in AI Video Assistant)
-
----
-
-## 🛠 Installation
-
-```bash
-# Clone the repository
-git clone <repository-url>
-cd "GenAI Learning"
-
-# Install dependencies (using uv — recommended)
-uv sync
-
-# Or using pip
-pip install -r requirements.txt
-
-# Copy and fill environment variables
-cp .env.example .env
-```
+| Issue | What to check |
+| --- | --- |
+| `Connection refused` to Ollama | Ollama running; `OLLAMA_BASE_URL`; models pulled (`phi3`, `nomic-embed-text`) |
+| `TMDB_API_KEY missing` | Set `TMDB_API_KEY` in root `.env` before importing `movie-rec-ai.main` |
+| `SARVAM_API_KEY is not set` | Required for `hinglish` transcription |
+| `DATABASE_URL is missing` / Groq errors | Required for TripMate (`backend.py`) |
+| TripMate weather MCP fails | `mcp_client.py` currently hardcodes a machine-specific Python path and script path—update both to your local `custom_weather_mcp_server.py` |
+| Audio / YouTube failures | Install FFmpeg; confirm yt-dlp / pydub imports |
+| FAISS / Chroma lock on Windows | RAG app retries directory removal and may fall back to a timestamped folder |
+| `ModuleNotFoundError` | Install the missing package for that subproject (root lockfile does not cover every demo) |
+| Movie UI cannot reach API | Confirm API is up, or change `API_BASE` in `movie-rec-ai/app.py` to your local Uvicorn URL |
 
 ---
 
-## 🔑 Environment Variables
+## Future Improvements
 
-Create a `.env` file in the root directory:
+Ideas aligned with the current codebase gaps:
 
-```env
-# Ollama (local)
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=phi3
-OLLAMA_CHAT_MODEL=phi3:latest
-OLLAMA_EMBEDDING_MODEL=nomic-embed-text:latest
-OLLAMA_TEMPERATURE=0.3
-
-# External APIs
-TAVILY_API_KEY=<your-tavily-api-key>
-TMDB_API_KEY=<your-tmdb-api-key>
-OPENWEATHER_API_KEY=<your-openweather-api-key>
-SARVAM_API_KEY=<your-sarvam-api-key>        # For Hinglish transcription
-```
+- Add a root `.env.example` documenting all keys without secrets
+- Align `pyproject.toml` / `uv.lock` / `requirements.txt` with packages actually imported by each app
+- Add a small pytest smoke suite for FastAPI `/health` routes and pure helpers
+- Make TripMate MCP weather paths configurable via environment variables
+- Add a root `static/` mount or serve TripMate CSS/JS consistently with FastAPI
+- Optional Docker Compose for Ollama + PostgreSQL + selected APIs
 
 ---
 
-## 👤 Author
+## Contributing
 
-**Sadik Mohammad**
+Contributions that improve clarity, dependency hygiene, or demos are welcome.
 
-- GitHub: [Your GitHub Profile]
-- Email: [Your Email]
+1. Fork [SadiqCodex/GenAI-Learning-Project](https://github.com/SadiqCodex/GenAI-Learning-Project)
+2. Create a feature branch
+3. Keep changes scoped; do not commit `.env` or API keys
+4. Open a pull request with a short description of what you ran and how you verified it
 
 ---
 
-*Built with LangChain · Ollama · Streamlit · FastAPI · Whisper · FAISS · ChromaDB*
+## License
+
+This project is licensed under the **MIT License** — see [LICENSE](LICENSE).
+
+Copyright (c) 2025 Sadik Mohammad.
+
+---
+
+## Contact
+
+**Sadik Mohammad** ([SadiqCodex](https://github.com/SadiqCodex))
+
+- Repository: [github.com/SadiqCodex/GenAI-Learning-Project](https://github.com/SadiqCodex/GenAI-Learning-Project)
+- Issues: [github.com/SadiqCodex/GenAI-Learning-Project/issues](https://github.com/SadiqCodex/GenAI-Learning-Project/issues)
+
+---
+
+*Built as a hands-on GenAI learning lab — LangChain · LangGraph · Ollama · Streamlit · FastAPI · Whisper · FAISS · Chroma · MCP*
