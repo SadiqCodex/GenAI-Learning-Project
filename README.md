@@ -12,6 +12,35 @@ A learning-focused monorepo of Python experiments and demo apps—from basic LLM
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![GitHub](https://img.shields.io/badge/GitHub-SadiqCodex-181717?logo=github)](https://github.com/SadiqCodex/GenAI-Learning-Project)
 
+<br>
+
+### 🚀 Live Demos
+
+<p align="center">
+  <a href="https://genai-ai-video-assistant.streamlit.app/"><img src="https://img.shields.io/badge/🎬_AI_Video_Assistant-Live-7C3AED?style=for-the-badge" alt="AI Video Assistant"></a>
+  &nbsp;
+  <a href="https://genai-multiagent-research-ai.streamlit.app/"><img src="https://img.shields.io/badge/🔬_Research_Agent-Live-FF8C32?style=for-the-badge" alt="Multi-Agent Research"></a>
+  &nbsp;
+  <a href="http://tripmates-ai.netlify.app/"><img src="https://img.shields.io/badge/✈️_TripMate_AI-Live-0EA5E9?style=for-the-badge" alt="TripMate AI"></a>
+</p>
+
+<p align="center">
+  <a href="https://genai-rag-ai.streamlit.app/"><img src="https://img.shields.io/badge/📚_RAG_Book_Assistant-Live-10B981?style=for-the-badge" alt="RAG Book Assistant"></a>
+  &nbsp;
+  <a href="https://genai-movie-rec-ai.streamlit.app/"><img src="https://img.shields.io/badge/🎞️_Movie_Recommender-Live-E11D48?style=for-the-badge" alt="Movie Recommender"></a>
+  &nbsp;
+  <a href="https://genai-movie-extractorai.streamlit.app/"><img src="https://img.shields.io/badge/🍿_CineSage_Extractor-Live-F59E0B?style=for-the-badge" alt="CineSage"></a>
+</p>
+
+| App | Live URL |
+| --- | --- |
+| 🎬 AI Video Assistant | [genai-ai-video-assistant.streamlit.app](https://genai-ai-video-assistant.streamlit.app/) |
+| 🔬 Multi-Agent Research | [genai-multiagent-research-ai.streamlit.app](https://genai-multiagent-research-ai.streamlit.app/) |
+| ✈️ TripMate AI | [tripmates-ai.netlify.app](http://tripmates-ai.netlify.app/) |
+| 📚 RAG Book Assistant | [genai-rag-ai.streamlit.app](https://genai-rag-ai.streamlit.app/) |
+| 🎞️ Movie Recommender | [genai-movie-rec-ai.streamlit.app](https://genai-movie-rec-ai.streamlit.app/) |
+| 🍿 CineSage Extractor | [genai-movie-extractorai.streamlit.app](https://genai-movie-extractorai.streamlit.app/) |
+
 ---
 
 ## Table of Contents
@@ -34,6 +63,7 @@ A learning-focused monorepo of Python experiments and demo apps—from basic LLM
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
+- [Live Demos (Footer)](#-try-the-live-apps)
 
 ---
 
@@ -520,12 +550,25 @@ There is **no automated pytest suite** in this repository. Manual / exploratory 
 
 ## Deployment
 
+### Hosted apps
+
+| Project | Platform | Live demo |
+| --- | --- | --- |
+| AI Video Assistant | Streamlit Cloud | [Open demo](https://genai-ai-video-assistant.streamlit.app/) |
+| Multi-Agent Research | Streamlit Cloud | [Open demo](https://genai-multiagent-research-ai.streamlit.app/) |
+| RAG Book Assistant | Streamlit Cloud | [Open demo](https://genai-rag-ai.streamlit.app/) |
+| Movie Recommender | Streamlit Cloud | [Open demo](https://genai-movie-rec-ai.streamlit.app/) |
+| CineSage Extractor | Streamlit Cloud | [Open demo](https://genai-movie-extractorai.streamlit.app/) |
+| TripMate AI | Netlify | [Open demo](http://tripmates-ai.netlify.app/) |
+
+### Other deployment notes
+
 | Component | Notes present in repo |
 | --- | --- |
 | Movie API | `movie-rec-ai/runtime.txt` specifies `python-3.11.9` (Render-style). Streamlit UI references `https://movie-rec-466x.onrender.com`. |
-| TripMate | `DATABASE_URL` error text mentions a Render PostgreSQL external URL; local run uses Uvicorn on `127.0.0.1:8000`. |
+| TripMate | `DATABASE_URL` error text mentions a Render PostgreSQL external URL; local run uses Uvicorn on `127.0.0.1:8000`. Frontend is also hosted at [tripmates-ai.netlify.app](http://tripmates-ai.netlify.app/). |
 
-No other first-class deployment configs (Dockerfiles, CI workflows) are included in this repository.
+No Dockerfiles or CI workflows are included in this repository.
 
 ---
 
@@ -586,4 +629,39 @@ Copyright (c) 2025 Sadik Mohammad.
 
 ---
 
-*Built as a hands-on GenAI learning lab — LangChain · LangGraph · Ollama · Streamlit · FastAPI · Whisper · FAISS · Chroma · MCP*
+## 🌐 Try the Live Apps
+
+<p align="center">
+  <strong>Click a badge to open the deployed demo</strong>
+</p>
+
+<p align="center">
+  <a href="https://genai-ai-video-assistant.streamlit.app/"><img src="https://img.shields.io/badge/🎬_AI_Video_Assistant-Live-7C3AED?style=for-the-badge" alt="AI Video Assistant"></a>
+  &nbsp;
+  <a href="https://genai-multiagent-research-ai.streamlit.app/"><img src="https://img.shields.io/badge/🔬_Research_Agent-Live-FF8C32?style=for-the-badge" alt="Multi-Agent Research"></a>
+  &nbsp;
+  <a href="http://tripmates-ai.netlify.app/"><img src="https://img.shields.io/badge/✈️_TripMate_AI-Live-0EA5E9?style=for-the-badge" alt="TripMate AI"></a>
+</p>
+
+<p align="center">
+  <a href="https://genai-rag-ai.streamlit.app/"><img src="https://img.shields.io/badge/📚_RAG_Book_Assistant-Live-10B981?style=for-the-badge" alt="RAG Book Assistant"></a>
+  &nbsp;
+  <a href="https://genai-movie-rec-ai.streamlit.app/"><img src="https://img.shields.io/badge/🎞️_Movie_Recommender-Live-E11D48?style=for-the-badge" alt="Movie Recommender"></a>
+  &nbsp;
+  <a href="https://genai-movie-extractorai.streamlit.app/"><img src="https://img.shields.io/badge/🍿_CineSage_Extractor-Live-F59E0B?style=for-the-badge" alt="CineSage"></a>
+</p>
+
+| # | Project | Live demo |
+| --- | --- | --- |
+| 1 | AI Video Assistant | https://genai-ai-video-assistant.streamlit.app/ |
+| 2 | Multi-Agent Research System | https://genai-multiagent-research-ai.streamlit.app/ |
+| 3 | TripMate AI | http://tripmates-ai.netlify.app/ |
+| 4 | RAG Book Assistant | https://genai-rag-ai.streamlit.app/ |
+| 5 | Movie Recommender AI | https://genai-movie-rec-ai.streamlit.app/ |
+| 6 | CineSage Movie Extractor | https://genai-movie-extractorai.streamlit.app/ |
+
+---
+
+<p align="center">
+  <em>Built as a hands-on GenAI learning lab — LangChain · LangGraph · Ollama · Streamlit · FastAPI · Whisper · FAISS · Chroma · MCP</em>
+</p>
